@@ -1,0 +1,76 @@
+# What Happens When You Type https://www.google.com in Your Browser and Press Enter?
+
+## Introduction
+
+Have you ever wondered what happens in the milliseconds between typing a URL in your browser and seeing a webpage load? Behind that simple keypress lies a complex journey involving global networks, security protocols, distributed systems, and databases.
+
+Whether you are a web enthusiast or preparing for technical software engineering interviews, understanding this full-stack flow is essential. Here is a step-by-step breakdown of the web infrastructure stack.
+
+## 1. DNS Request: Translating Names to IP Addresses
+
+Computers do not communicate using human-readable domain names like `www.google.com`; they use numerical IP addresses (such as `142.250.190.46`).
+
+- **Browser & OS Cache:** The browser checks if it already knows the IP address from a recent visit. If not, it asks the Operating System.
+- **Resolver (ISP):** If un-cached, a query is sent to the DNS Recursive Resolver (usually provided by your ISP or public services like `8.8.8.8`).
+- **Root, TLD, and Authoritative Servers:** The resolver queries the Root DNS server, then the `.com` TLD (Top-Level Domain) server, and finally Google's Authoritative Name Server, which returns the exact IP address.
+
+## 2. TCP/IP: Establishing the Network Connection
+
+Once the browser receives the IP address, it must establish a reliable network connection with the destination server using the TCP/IP (Transmission Control Protocol / Internet Protocol) suite.
+
+To open this connection, a **TCP Three-Way Handshake** occurs:
+
+1. **SYN:** The client browser sends a Synchronize packet to request a connection.
+2. **SYN-ACK:** The server responds with a Synchronize-Acknowledge packet.
+3. **ACK:** The client sends an Acknowledge packet back.
+
+The connection is now open for data exchange.
+
+## 3. Firewall: The Security Gatekeeper
+
+Before packets enter the host network, they pass through Firewalls (both hardware and software).
+
+- The firewall analyzes incoming and outgoing traffic based on predefined security rules.
+- It blocks unauthorized access, prevents DDoS attacks, and filters out malicious packets while allowing secure traffic on standard web ports (such as Port 443 for HTTPS).
+
+## 4. HTTPS / SSL / TLS: Encrypting the Communication
+
+Because the request uses `https://`, the traffic must be encrypted to ensure privacy and data integrity.
+
+- **TLS Handshake:** The browser and server negotiate encryption keys using asymmetric cryptography.
+- **SSL Certificate Validation:** The browser verifies Google's SSL/TLS certificate issued by a trusted Certificate Authority (CA).
+- **Symmetric Encryption:** Once validated, a shared secret key is generated to encrypt all subsequent HTTP data transmitted between the client and server.
+
+## 5. Load Balancer: Distributing Incoming Traffic
+
+Google handles billions of requests every day. A single server would crash immediately under this volume.
+
+- The request arrives at a Load Balancer (e.g., HAProxy, Nginx, or hardware load balancers).
+- The load balancer distributes incoming network traffic across multiple backend servers using algorithms like Round Robin, Least Connections, or IP Hash.
+- This ensures high availability, redundancy, and fault tolerance.
+
+## 6. Web Server: Serving Static Content
+
+The load balancer routes the encrypted request to an available Web Server (such as Nginx or Apache).
+
+- **Role:** The Web Server handles direct HTTP requests.
+- **Tasks:** It serves static files (HTML, CSS, images, client-side scripts) and forwards dynamic requests further down the pipeline to the Application Server.
+
+## 7. Application Server: Processing Business Logic
+
+For dynamic web applications, the Application Server handles the core business logic.
+
+- It processes user input, handles user sessions, applies business rules, and determines what data needs to be retrieved or modified.
+- It acts as the bridge between the Web Server and the underlying Database.
+
+## 8. Database: Data Storage and Retrieval
+
+To render personal preferences, search history, or dynamic results, the Application Server queries the Database (e.g., MySQL, PostgreSQL, or NoSQL databases like MongoDB).
+
+- The database executes queries to fetch or update records.
+- The retrieved data is passed back to the Application Server.
+- The Application Server compiles the response into a dynamic format (like JSON or rendered HTML) and passes it back up the stack to the Web Server, Load Balancer, and back to your browser.
+
+## Conclusion
+
+Once the browser receives the complete HTTP response, its rendering engine parses the HTML to build the DOM tree, processes the CSS for styles, and executes JavaScript. Finally, Google's homepage is fully rendered on your screen — all completed in a fraction of a second!
